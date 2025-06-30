@@ -35,22 +35,6 @@
 
 extern bool  g_loop_trace;
 
-typedef struct s_packet
-{
-    int             bytes;
-    int             sequence;
-    int             ttl;
-    double			rtt;
-    bool            delivered;
-	struct s_packet	*next;
-}	t_packet;
-
-//List functions
-t_packet	*ft_packetnew(int rtt, bool delivered,int bytes, int sequence, int ttl);
-t_packet	*ft_packetlast(t_packet *lst);
-void	ft_packetadd_back(t_packet **lst, t_packet *new);
-void free_packet(t_packet *stats);
-
 typedef struct s_params
 {
     struct timeval	start_tracer;

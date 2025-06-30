@@ -10,9 +10,7 @@ SRCS =	srcs/main.c \
 		srcs/socket.c \
 		srcs/flag.c \
 		srcs/icmp.c \
- 		srcs/packet.c \
 		srcs/dns.c  
-# 		srcs/signal.c \
 # 		srcs/free.c \
 
 # FLAGS #
