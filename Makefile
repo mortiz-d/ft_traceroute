@@ -9,7 +9,7 @@ RESET = "\033[1;0m"
 SRCS =	srcs/main.c \
 		srcs/socket.c \
 		srcs/flag.c \
-		srcs/icmp.c \
+		srcs/probe.c \
 		srcs/dns.c  
 # 		srcs/free.c \
 

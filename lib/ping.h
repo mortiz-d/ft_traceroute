@@ -6,13 +6,14 @@
 #define PING_USSAGE_ERROR "ping :usage error:a direction must be specified\n"
 
 
-#define PAYLOAD_SIZE_DEFAULT 56 //Tamaño del mensaje en ICMP que queremos mandar
+#define PAYLOAD_SIZE_DEFAULT 32 //Tamaño del mensaje en ICMP que queremos mandar
 #define ICMPHDR (sizeof(struct icmphdr))
 #define TOTAL_SIZE (ICMPHDR+sizeof(struct iphdr))
 
 #define DEFAULT_TTL 64
 #define DEFAULT_TIMEOUT 1000
-#define DEFAULT_HOPS 3 
+#define DEFAULT_HOPS 30
+#define UDP_DEFAULT_BASE_PORT 33434
 
 #define ICMP_ECHO_CODE 0
 #define DEBUG 0
@@ -29,29 +30,36 @@
 #include <netinet/ip.h>
 #include <netdb.h> 
 #include <netinet/ip_icmp.h>
+#include <netinet/udp.h>
 #include <sys/time.h>
 #include <errno.h>
 #include <netdb.h> 
 
 extern bool  g_loop_trace;
 
+typedef struct s_flags{                   
+    bool v;
+    bool h;
+    bool I;
+    bool undef;
+} t_flags;
+
 typedef struct s_params
 {
-    struct timeval	start_tracer;
-	struct timeval	end_ping;
+    t_flags         *flags;
     char			*destination;
     char            ip_address[INET_ADDRSTRLEN];
 	int				ttl;
     int 			timeout_ms;
-    int 			count;
     int				payload_size;
-    //Trace params
     int             hops;
 
 }	t_params;
 
 typedef struct s_ping
 {
+    int             icmp_sock;
+    int             udp_sock;
 	int				id_process;
 	int				sequence;
     int             ttl;
@@ -60,35 +68,18 @@ typedef struct s_ping
 	struct timeval	end;
 }	t_tracer;
 
-typedef struct s_stat
-{
-	double      min;
-    double      max;
-    double      sum;
-    int         count;
-    int         count_rec;
-    double      avg;
-    double      mdev;
-    double      mdev_aux;
-}	t_stat;
-
-typedef struct active_flags{                   
-    bool v;
-    bool h;
-    bool c;
-    bool D;
-    bool t;
-    bool s;
-    bool undef;
-} active_flags;
-
 
 void handle_sigint(int sig);
-// int send_ping(int sockfd, struct sockaddr_in addr, t_tracer *pin,t_params *params);
-// void recv_ping(int sockfd,t_tracer *pin, t_params *params);
+
+//Socket connection
+bool establish_connection(t_params *params,int new_sockfd);
+bool update_ttl_sockets(t_tracer *pin, t_params *params);
+bool close_sockets(t_tracer *pin);
+//DNS resolution
 int dns_lookup(char *host, t_params *params);
-int ping_check_flags(int argc, char **argv,active_flags *flags,t_params *params);
-int establish_connection(t_params *params,int new_sockfd);
-int prepare_trace(int sockfd, struct sockaddr_in addr, t_tracer *pin,t_params *params);
 char *ip_a_dns(const char *ip_str);
+
+int ping_check_flags(int argc, char **argv,t_params *params);
+
+int prepare_trace( struct sockaddr_in addr, t_tracer *pin,t_params *params);
 #endif

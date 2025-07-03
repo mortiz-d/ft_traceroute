@@ -17,7 +17,7 @@ int dns_lookup(char *host, t_params *params) {
 
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_INET;                       // Para que nos devuelva en ipv4
-    hints.ai_socktype = SOCK_STREAM; // protocolo tcp
+    hints.ai_socktype = SOCK_STREAM;                // protocolo tcp
     hints.ai_flags = AI_CANONNAME | AI_ADDRCONFIG;	 //AI_CANONNAME para poner el nombre completo del host y AI_ADDRCONFIG para especificar ips deseadas (en este caso ipv4)
 
     status = getaddrinfo(host, NULL, &hints, &result);
@@ -37,26 +37,23 @@ char *ip_a_dns(const char *ip_str)
 {
     struct sockaddr_in sa;
     char host[NI_MAXHOST];
+    int err;
+    char *dns;
 
     memset(&sa, 0, sizeof(sa));
     sa.sin_family = AF_INET;
 
-    /* 1. Convertir la cadena IP a binario. */
     if (inet_pton(AF_INET, ip_str, &sa.sin_addr) != 1)
         return NULL;
 
-    /* 2. Resolver la entrada PTR con getnameinfo. */
-    int err = getnameinfo((struct sockaddr *)&sa, sizeof sa,
-                          host, sizeof host,
-                          NULL, 0, NI_NAMEREQD);   // NI_NAMEREQD obliga a que exista PTR
+    err = getnameinfo((struct sockaddr *)&sa, sizeof sa, host, sizeof host, NULL, 0, NI_NAMEREQD);
     if (err != 0)
         return NULL;
 
-    /* 3. Copiar el resultado a memoria propia para que el caller la libere. */
-    char *dns = malloc(strlen(host) + 1);
-    if (!dns)                // sin memoria
+    dns = malloc(strlen(host) + 1);
+    if (!dns)
         return NULL;
 
     strcpy(dns, host);
-    return dns;              // recuerda: free(dns) cuando ya no la necesites
+    return dns;
 }

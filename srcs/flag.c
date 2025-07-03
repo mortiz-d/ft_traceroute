@@ -24,9 +24,8 @@ bool is_exact_word(char *str, char *cmp)
 	return false;
 }
 
-int ping_check_flags(int argc, char **argv, active_flags *flags,t_params *params)
+int ping_check_flags(int argc, char **argv, t_params *params)
 {
-	(void) flags;
 	(void) params;
 	int i = 1;
 
@@ -34,8 +33,14 @@ int ping_check_flags(int argc, char **argv, active_flags *flags,t_params *params
 	{
 		if (is_exact_word("-h",argv[i]))	//Flag help
 			return (invoque_flag_help());
+		if (is_exact_word("-I",argv[i]))	//Flag ICMP ECHO probes activated
+		{
+			printf("Flag ICMP ECHO probes activated\n");
+			params->flags->I = true;
+		}
 		i++;
 	}
+	// params->flags = *flags;
 	return 1;
 }
 
