@@ -13,6 +13,7 @@
 #define DEFAULT_TTL 64
 #define DEFAULT_TIMEOUT 1000
 #define DEFAULT_HOPS 30
+#define DEFAULT_NQUERIES 3
 #define UDP_DEFAULT_BASE_PORT 33434
 
 #define ICMP_ECHO_CODE 0
@@ -41,6 +42,7 @@ typedef struct s_flags{
     bool v;
     bool h;
     bool I;
+    bool q;
     bool undef;
 } t_flags;
 
@@ -53,6 +55,7 @@ typedef struct s_params
     int 			timeout_ms;
     int				payload_size;
     int             hops;
+    int             nquerys;
 
 }	t_params;
 

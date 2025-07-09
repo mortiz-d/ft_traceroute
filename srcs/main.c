@@ -18,7 +18,7 @@ int close_all(t_params *params,t_tracer *pin,int error_code)
     return (error_code);
 }
 
-void setup_default_params(t_params *params,t_tracer *pin,char *dest)
+void setup_default_params(t_params *params,t_tracer *pin)
 {
     t_flags *flags;
 
@@ -31,9 +31,32 @@ void setup_default_params(t_params *params,t_tracer *pin,char *dest)
     params->ttl = 1; //En este caso queremos que entren por defecto desde el mas bajo
     params->timeout_ms = DEFAULT_TIMEOUT;
     params->payload_size = PAYLOAD_SIZE_DEFAULT;
-	params->destination = dest;
     params->hops = DEFAULT_HOPS;
+    params->nquerys = DEFAULT_NQUERIES;
     params->flags = flags;
+
+}
+
+int assign_destination(char **argv,int argc, t_params *params)
+{
+    int i;
+
+    i = 1;
+    params->destination = NULL;
+    while (i < argc)
+    {
+        if (argv[i][0] != '\0')
+        {
+            params->destination = argv[i];
+            break;
+        }
+        // printf("%s\n",argv[i]);
+        i++;
+    }
+    // printf("destiny is %s\n",params->destination);
+    if (params->destination == NULL)
+        return 0;
+    return 1;
 
 }
 
@@ -49,14 +72,24 @@ int main(int argc, char **argv)
         printf (PING_USSAGE_ERROR);
         return 0;
     }
-    
-	pin = calloc(1,sizeof(t_tracer));
+
+    pin = calloc(1,sizeof(t_tracer));
     params = calloc(1,sizeof(t_params));
-    setup_default_params(params,pin,argv[1]);
+    setup_default_params(params,pin);
 
     if (ping_check_flags(argc, argv, params) == 0)
         return (close_all(params,pin,1));
-    
+
+    // for (int x = 0 ; x < argc; x++)
+    // {pñl¡b7yn8um9i,0o.ñ'p´
+    //     printf ("argv -> '%s'\n",argv[x]);
+    // }
+    if (!assign_destination(argv,argc,params))
+        return (close_all(params,pin,1));
+
+    // params->destination = 
+
+    // return 0;
     pin->udp_sock  = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     pin->icmp_sock = socket(AF_INET, SOCK_RAW,  IPPROTO_ICMP);
     

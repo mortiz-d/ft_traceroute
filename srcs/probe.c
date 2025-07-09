@@ -197,7 +197,7 @@ static int send_probe(struct sockaddr_in addr, t_tracer *pin,t_params *params)
 int prepare_trace(struct sockaddr_in addr, t_tracer *pin,t_params *params)
 {
     printf("%d ",params->ttl);
-    for  (int i = 0; i < 3; i++ )
+    for  (int i = 0; i < params->nquerys; i++ )
     {
         if (send_probe( addr,pin, params) == 1)
         {
