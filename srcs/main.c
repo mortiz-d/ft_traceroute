@@ -1,5 +1,5 @@
 
-#include "../lib/ping.h"
+#include "../lib/traceroute.h"
 
 
 bool g_loop_trace;
@@ -80,16 +80,9 @@ int main(int argc, char **argv)
     if (ping_check_flags(argc, argv, params) == 0)
         return (close_all(params,pin,1));
 
-    // for (int x = 0 ; x < argc; x++)
-    // {pñl¡b7yn8um9i,0o.ñ'p´
-    //     printf ("argv -> '%s'\n",argv[x]);
-    // }
     if (!assign_destination(argv,argc,params))
         return (close_all(params,pin,1));
 
-    // params->destination = 
-
-    // return 0;
     pin->udp_sock  = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     pin->icmp_sock = socket(AF_INET, SOCK_RAW,  IPPROTO_ICMP);
     
@@ -110,7 +103,7 @@ int main(int argc, char **argv)
     }
 
     printf("traceroute to %s (%s) , %d hops max , %ld byte packets\n",params->destination, params->ip_address, params->hops, (TOTAL_SIZE + params->payload_size));
-	while (g_loop_trace && params->hops-- >= 0)
+	while (g_loop_trace && params->hops-- > 0)
 	{
 		if (!update_ttl_sockets(pin, params)) 
             break;

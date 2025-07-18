@@ -1,4 +1,4 @@
-#include "../lib/ping.h"
+#include "../lib/traceroute.h"
 
 // ping: usage error: Se debe especificar la dirección de destino (no poner argumento)
 // ping: invalid argument: 'asdaa' (erroneus input)
@@ -6,9 +6,13 @@
 int invoque_flag_help(void)
 {
 	printf("Usage:\n"
-		"traceroute [] [] [options] <destination>\n"
+		"traceroute [options...] <destination>\n"
 		"Options:\n"
-		"   -h                 print help and exit\n"
+		"	-h					print help and exit\n"
+		"	-I					use ICMP ECHO as probe\n"
+		"	-q					send NUM probes packet per hop (default : 3)\n"
+		"	-m					sets max amount of hops (default : 64)\n"
+		"	--resolve-hostnames	resolve hostnames\n"
 		"For more details consult mortiz-d or traceroute...\n"
 		"Arguments:\n"
 		"+     host          The host to traceroute to\n"
@@ -59,11 +63,11 @@ bool valid_argument(char *str, int max_range, int min_range)
 
 bool is_key_word(char * str)
 {
-	char *aux[] = {"-h","-I","-q","-m"};
+	char *aux[] = {"-h","-I","-q","-m","--resolve-hostnames"};
 	int i;
 	
 	i = 0;
-	while (i <  4)
+	while (i <  5)
 		if (is_exact_word(str,aux[i++]))
 	 		return true;
 	return false;
@@ -79,9 +83,10 @@ int ping_check_flags(int argc, char **argv, t_params *params)
 	
 		if (is_exact_word("-h",argv[i]))	//Flag help
 			return (invoque_flag_help());
-		if (is_exact_word("-I",argv[i]))	//Flag ICMP ECHO probes activated
+		else if (is_exact_word("--resolve-hostnames",argv[i]))	//Flag resolve hostnames
+			params->flags->r = true;
+		else if (is_exact_word("-I",argv[i]))	//Flag ICMP ECHO probes activated
 		{
-			printf("Flag ICMP ECHO probes activated\n");
 			params->flags->I = true;
 		}
 		else if (is_exact_word("-q",argv[i]))	//nqueries
@@ -106,7 +111,6 @@ int ping_check_flags(int argc, char **argv, t_params *params)
             if (valid_argument(argv[i+1], 255, 1))
 			{
 				params->hops = atoi(argv[i+1]);
-				params->flags->q = true;
 			}
             else
 				return 0;

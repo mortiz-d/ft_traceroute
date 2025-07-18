@@ -10,8 +10,10 @@ SRCS =	srcs/main.c \
 		srcs/socket.c \
 		srcs/flag.c \
 		srcs/probe.c \
+ 		srcs/probe_aux.c \
+		srcs/probe_icmp.c \
+		srcs/probe_udp.c \
 		srcs/dns.c  
-# 		srcs/free.c \
 
 # FLAGS #
 OBJS_DIR = objetos

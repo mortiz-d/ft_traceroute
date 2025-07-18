@@ -43,6 +43,8 @@ typedef struct s_flags{
     bool h;
     bool I;
     bool q;
+    bool m;
+    bool r;
     bool undef;
 } t_flags;
 
@@ -85,4 +87,18 @@ char *ip_a_dns(const char *ip_str);
 int ping_check_flags(int argc, char **argv,t_params *params);
 
 int prepare_trace( struct sockaddr_in addr, t_tracer *pin,t_params *params);
+
+//UDP
+bool process_probe_udp(t_tracer *pin, t_params *params, char *recv_buf);
+int send_probe_udp(struct sockaddr_in addr, t_tracer *pin,t_params *params);
+
+//ICMP
+bool process_probe_icmp(t_tracer *pin, t_params *params, char *recv_buf);
+int send_probe_icmp(struct sockaddr_in addr, t_tracer *pin,t_params *params);
+
+//AUX
+unsigned short checksum(char *b, int len);
+double time_diff_ms(struct timeval *start, struct timeval *end);
+void print_trace_header ( t_params *params , t_tracer *trace,char new_router_ip[INET_ADDRSTRLEN]);
+
 #endif

@@ -1,4 +1,4 @@
-#include "../lib/ping.h"
+#include "../lib/traceroute.h"
 
 #include <stdio.h>
 #include <stdlib.h>

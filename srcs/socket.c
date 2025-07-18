@@ -1,4 +1,4 @@
-#include "../lib/ping.h"
+#include "../lib/traceroute.h"
 
 bool update_ttl_sockets(t_tracer *pin, t_params *params)
 {
