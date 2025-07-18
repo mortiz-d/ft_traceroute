@@ -73,8 +73,8 @@ int main(int argc, char **argv)
         return 0;
     }
 
-    pin = calloc(1,sizeof(t_tracer));
-    params = calloc(1,sizeof(t_params));
+    pin = ft_calloc(1,sizeof(t_tracer));
+    params = ft_calloc(1,sizeof(t_params));
     setup_default_params(params,pin);
 
     if (ping_check_flags(argc, argv, params) == 0)
@@ -93,7 +93,7 @@ int main(int argc, char **argv)
         return (close_all(params,pin,1));
 
 	dns_lookup(params->destination, params);
-	memset(&addr, 0, sizeof(addr));
+	ft_memset(&addr, 0, sizeof(addr));
     addr.sin_family = AF_INET;
     if (inet_pton(AF_INET, params->ip_address, &addr.sin_addr) <= 0) {
         printf("ping : %s : Nombre o servicio desconocido\n",params->destination);

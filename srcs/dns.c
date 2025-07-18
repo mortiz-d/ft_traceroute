@@ -15,7 +15,7 @@ int dns_lookup(char *host, t_params *params) {
 	struct sockaddr_in *addr;
     int status;
 
-    memset(&hints, 0, sizeof(hints));
+    ft_memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_INET;                       // Para que nos devuelva en ipv4
     hints.ai_socktype = SOCK_STREAM;                // protocolo tcp
     hints.ai_flags = AI_CANONNAME | AI_ADDRCONFIG;	 //AI_CANONNAME para poner el nombre completo del host y AI_ADDRCONFIG para especificar ips deseadas (en este caso ipv4)
@@ -40,7 +40,7 @@ char *ip_a_dns(const char *ip_str)
     int err;
     char *dns;
 
-    memset(&sa, 0, sizeof(sa));
+    ft_memset(&sa, 0, sizeof(sa));
     sa.sin_family = AF_INET;
 
     if (inet_pton(AF_INET, ip_str, &sa.sin_addr) != 1)

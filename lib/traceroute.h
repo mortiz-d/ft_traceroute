@@ -20,21 +20,13 @@
 #define DEBUG 0
 
 #include "../libft/lib/libft.h"
-#include <stdio.h>
-#include <signal.h>
-#include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include <stdbool.h>
-#include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netinet/ip.h>
-#include <netdb.h> 
 #include <netinet/ip_icmp.h>
 #include <netinet/udp.h>
 #include <sys/time.h>
-#include <errno.h>
-#include <netdb.h> 
 
 extern bool  g_loop_trace;
 
