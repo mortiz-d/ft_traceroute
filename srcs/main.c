@@ -24,7 +24,7 @@ void setup_default_params(t_params *params,t_tracer *pin)
 
     flags = ft_calloc(1,sizeof(t_flags));
 	pin->id_process = getpid() & 0xFFFF; //Acortamos el tamaño del getpid para que entre bien en el packete icmp(16 bits)
-	pin->sequence = 1;
+	pin->sequence = 0;
     
     
     g_loop_trace = true;
@@ -50,10 +50,8 @@ int assign_destination(char **argv,int argc, t_params *params)
             params->destination = argv[i];
             break;
         }
-        // printf("%s\n",argv[i]);
         i++;
     }
-    // printf("destiny is %s\n",params->destination);
     if (params->destination == NULL)
         return 0;
     return 1;
@@ -69,7 +67,7 @@ int main(int argc, char **argv)
     
     if (argc < 2)
     {
-        printf (PING_USSAGE_ERROR);
+        printf (TRACE_USSAGE_ERROR);
         return 0;
     }
 
@@ -77,7 +75,7 @@ int main(int argc, char **argv)
     params = ft_calloc(1,sizeof(t_params));
     setup_default_params(params,pin);
 
-    if (ping_check_flags(argc, argv, params) == 0)
+    if (trace_check_flags(argc, argv, params) == 0)
         return (close_all(params,pin,1));
 
     if (!assign_destination(argv,argc,params))
@@ -96,9 +94,9 @@ int main(int argc, char **argv)
 	ft_memset(&addr, 0, sizeof(addr));
     addr.sin_family = AF_INET;
     if (inet_pton(AF_INET, params->ip_address, &addr.sin_addr) <= 0) {
-        printf("ping : %s : Nombre o servicio desconocido\n",params->destination);
+        printf("traceroute : %s : Nombre o servicio desconocido\n",params->destination);
         if (DEBUG)
-        fprintf(stderr,"NO PUDE CONVERTIR A BINARIO LA IP");
+            fprintf(stderr,"NO PUDE CONVERTIR A BINARIO LA IP");
         return (close_all(params,pin,1));
     }
 

@@ -1,9 +1,9 @@
-#ifndef PING_H
-# define PING_H
+#ifndef TRACE_H
+# define TRACE_H
 
 #define _POSIX_C_SOURCE 200112L //Esto es para mi ordenador que puede actuar funny el hijopu
 #define NI_MAXHOST 1025
-#define PING_USSAGE_ERROR "ping :usage error:a direction must be specified\n"
+#define TRACE_USSAGE_ERROR "traceroute :usage error:a direction must be specified\n"
 
 
 #define PAYLOAD_SIZE_DEFAULT 32 //Tamaño del mensaje en ICMP que queremos mandar
@@ -11,7 +11,7 @@
 #define TOTAL_SIZE (ICMPHDR+sizeof(struct iphdr))
 
 #define DEFAULT_TTL 64
-#define DEFAULT_TIMEOUT 1000
+#define DEFAULT_TIMEOUT 3000
 #define DEFAULT_HOPS 30
 #define DEFAULT_NQUERIES 3
 #define UDP_DEFAULT_BASE_PORT 33434
@@ -53,7 +53,7 @@ typedef struct s_params
 
 }	t_params;
 
-typedef struct s_ping
+typedef struct s_tracer
 {
     int             icmp_sock;
     int             udp_sock;
@@ -65,9 +65,6 @@ typedef struct s_ping
 	struct timeval	end;
 }	t_tracer;
 
-
-void handle_sigint(int sig);
-
 //Socket connection
 bool establish_connection(t_params *params,int new_sockfd);
 bool update_ttl_sockets(t_tracer *pin, t_params *params);
@@ -76,7 +73,7 @@ bool close_sockets(t_tracer *pin);
 int dns_lookup(char *host, t_params *params);
 char *ip_a_dns(const char *ip_str);
 
-int ping_check_flags(int argc, char **argv,t_params *params);
+int trace_check_flags(int argc, char **argv,t_params *params);
 
 int prepare_trace( struct sockaddr_in addr, t_tracer *pin,t_params *params);
 

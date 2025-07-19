@@ -1,38 +1,34 @@
 #include "../lib/traceroute.h"
 
-static void recv_probe(t_tracer *pin, t_params *params, ssize_t mensaje_size)
+static void recv_probe(t_tracer *tra, t_params *params, ssize_t mensaje_size)
 {
-    char mensaje[mensaje_size];
+    char message[mensaje_size];
     struct sockaddr_in recv_addr;
     socklen_t addr_len;
     ssize_t rec_bytes;
-    int max_attempts;
-
-    max_attempts = 3;
-    ft_memset(mensaje,0,mensaje_size);
-    while(max_attempts > 0)
+    bool delivered;
+    
+    ft_memset(message,0,mensaje_size);
+    
+    rec_bytes = 0;
+    addr_len = sizeof(recv_addr);
+    rec_bytes = recvfrom(tra->icmp_sock, message, sizeof(message), 0, (struct sockaddr *)&recv_addr, &addr_len);
+    if (rec_bytes < 0) {
+        printf(" * ");
+        if (DEBUG)
+            fprintf(stderr,"traceroute : error packet_timeout :V\n");
+        return;
+    }
+    gettimeofday(&tra->end, NULL); //Packet reached reception
+    if (params->flags->I)
+        delivered = process_probe_icmp(tra, params, message);
+    else
+        delivered = process_probe_udp(tra, params, message);
+    if (!delivered)
     {
-        rec_bytes = 0;
-        addr_len = sizeof(recv_addr);
-        rec_bytes = recvfrom(pin->icmp_sock, mensaje, sizeof(mensaje), 0, (struct sockaddr *)&recv_addr, &addr_len);
-        if (rec_bytes < 0) {
-            printf(" * ");
-            if (DEBUG)
-                fprintf(stderr,"Error receiving the damm message :V\n");
-            break;
-        }
-        gettimeofday(&pin->end, NULL); //Packet reached reception
-        if (params->flags->I)
-        {
-            if (process_probe_icmp(pin, params, mensaje))
-                break;
-        }
-        else
-        {
-            if (process_probe_udp(pin, params, mensaje))
-                break;
-        }
-        max_attempts--;
+        printf(" * ");
+        if (DEBUG)
+        fprintf(stderr,"\ntraceroute : message '%d' arrived but failed to be validated :V\n",tra->sequence);
     }
     return;
 }
@@ -40,7 +36,6 @@ static void recv_probe(t_tracer *pin, t_params *params, ssize_t mensaje_size)
 int prepare_trace(struct sockaddr_in addr, t_tracer *pin,t_params *params)
 {
     int probe;
-
     
     printf("%d ",params->ttl);
     for  (int i = 0; i < params->nquerys; i++ )

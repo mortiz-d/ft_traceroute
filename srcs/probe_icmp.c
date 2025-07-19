@@ -47,7 +47,7 @@ bool process_probe_icmp(t_tracer *pin, t_params *params, char *recv_buf)
     if (checksum((void *)recv_icmp, ICMPHDR + params->payload_size) != 0)
     {
        if (DEBUG)
-            printf("ICMP packet integrity compromised\n");
+            printf("traceroute: ICMP packet integrity compromised\n");
         return false;
     }
 

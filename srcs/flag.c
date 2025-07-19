@@ -1,8 +1,5 @@
 #include "../lib/traceroute.h"
 
-// ping: usage error: Se debe especificar la dirección de destino (no poner argumento)
-// ping: invalid argument: 'asdaa' (erroneus input)
-
 int invoque_flag_help(void)
 {
 	printf("Usage:\n"
@@ -31,7 +28,7 @@ bool is_exact_word(char *str, char *cmp)
 int needs_argument(char c,t_flags *flags)
 {
 	flags->h = true;
-	printf ("ping : %c requires an argument\n",c);
+	printf ("traceroute : %c requires an argument\n",c);
 	return (invoque_flag_help());
 }
 
@@ -50,12 +47,12 @@ bool valid_argument(char *str, int max_range, int min_range)
     if (ft_strncmp(str, aux_c, ft_strlen(str)) == 0)
 		result = true;
 	else
-		printf("ping: invalid argument: %s\n",str);
+		printf("traceroute: invalid argument: %s\n",str);
 	free(aux_c);
 	if (aux > max_range || aux < min_range )
 	{
 		result = false;
-		printf("ping: invalid argument: '%s': out of range: %d <= value <= %d\n",str,min_range,max_range);
+		printf("traceroute: invalid argument: '%s': out of range: %d <= value <= %d\n",str,min_range,max_range);
 	}
 	return (result);
 }
@@ -73,7 +70,7 @@ bool is_key_word(char * str)
 	return false;
 }
 
-int ping_check_flags(int argc, char **argv, t_params *params)
+int trace_check_flags(int argc, char **argv, t_params *params)
 {
 	(void) params;
 	int i = 1;
@@ -96,7 +93,7 @@ int ping_check_flags(int argc, char **argv, t_params *params)
 
             if (valid_argument(argv[i+1], 10, 1))
 			{
-				params->nquerys = atoi(argv[i+1]);
+				params->nquerys = ft_atoi(argv[i+1]);
 				params->flags->q = true;
 			}
             else
@@ -110,7 +107,7 @@ int ping_check_flags(int argc, char **argv, t_params *params)
 
             if (valid_argument(argv[i+1], 255, 1))
 			{
-				params->hops = atoi(argv[i+1]);
+				params->hops = ft_atoi(argv[i+1]);
 			}
             else
 				return 0;

@@ -18,7 +18,7 @@ int send_probe_udp(struct sockaddr_in addr, t_tracer *pin,t_params *params)
     send = sendto(socket, mensaje, sizeof(mensaje), 0, (struct sockaddr *)&addr, sizeof(addr));
     if (send < 0) {
         if (DEBUG)
-            fprintf(stderr,"Error sending the damm message :V\n");
+            fprintf(stderr,"traceroute : Error sending UDP probe\n");
         return 0;
     }
 

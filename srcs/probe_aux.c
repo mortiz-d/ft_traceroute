@@ -23,9 +23,7 @@ void print_trace_header ( t_params *params , t_tracer *trace,char new_router_ip[
         ft_strlcpy(trace->router_ip,new_router_ip,INET_ADDRSTRLEN);
     }
     else
-    {
         printf(" %.3fms ",time_diff_ms(&trace->start, &trace->end));
-    }
     
 }
 
