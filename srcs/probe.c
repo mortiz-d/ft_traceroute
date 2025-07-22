@@ -1,14 +1,14 @@
 #include "../lib/traceroute.h"
 
-static void recv_probe(t_tracer *tra, t_params *params, ssize_t mensaje_size)
+static void recv_probe(t_tracer *tra, t_params *params)
 {
-    char message[mensaje_size];
+    char message[MAX_PACKET_SIZE];
     struct sockaddr_in recv_addr;
     socklen_t addr_len;
     ssize_t rec_bytes;
     bool delivered;
     
-    ft_memset(message,0,mensaje_size);
+    ft_memset(message,0,MAX_PACKET_SIZE);
     
     rec_bytes = 0;
     addr_len = sizeof(recv_addr);
@@ -23,10 +23,10 @@ static void recv_probe(t_tracer *tra, t_params *params, ssize_t mensaje_size)
     if (params->flags->I)
         delivered = process_probe_icmp(tra, params, message);
     else
-        delivered = process_probe_udp(tra, params, message);
+        delivered = process_probe_udp(tra, params, message,rec_bytes);
     if (!delivered)
     {
-        printf(" * ");
+        printf(" '*' ");
         if (DEBUG)
         fprintf(stderr,"\ntraceroute : message '%d' arrived but failed to be validated :V\n",tra->sequence);
     }
@@ -36,8 +36,7 @@ static void recv_probe(t_tracer *tra, t_params *params, ssize_t mensaje_size)
 int prepare_trace(struct sockaddr_in addr, t_tracer *pin,t_params *params)
 {
     int probe;
-    
-    printf("%d ",params->ttl);
+   
     for  (int i = 0; i < params->nquerys; i++ )
     {
         probe = 0;
@@ -49,7 +48,7 @@ int prepare_trace(struct sockaddr_in addr, t_tracer *pin,t_params *params)
         if (probe == 1)
         {
             gettimeofday(&pin->start, NULL); //Message sended
-            recv_probe(pin,params,(TOTAL_SIZE + params->payload_size));
+            recv_probe(pin,params);
         }
         pin->sequence++;
     }

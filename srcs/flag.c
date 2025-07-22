@@ -5,10 +5,11 @@ int invoque_flag_help(void)
 	printf("Usage:\n"
 		"traceroute [options...] <destination>\n"
 		"Options:\n"
+		"	-f <NUM>			set initial hop distance, i.e., time-to-live\n"
 		"	-h					print help and exit\n"
 		"	-I					use ICMP ECHO as probe\n"
-		"	-q					send NUM probes packet per hop (default : 3)\n"
-		"	-m					sets max amount of hops (default : 64)\n"
+		"	-q	<NUM>			send NUM probes packet per hop (default : 3)\n"
+		"	-m	<NUM>			sets max amount of hops (default : 64)\n"
 		"	--resolve-hostnames	resolve hostnames\n"
 		"For more details consult mortiz-d or traceroute...\n"
 		"Arguments:\n"
@@ -60,11 +61,11 @@ bool valid_argument(char *str, int max_range, int min_range)
 
 bool is_key_word(char * str)
 {
-	char *aux[] = {"-h","-I","-q","-m","--resolve-hostnames"};
+	char *aux[] = {"-h","-I","-q","-m","--resolve-hostnames","-f"};
 	int i;
 	
 	i = 0;
-	while (i <  5)
+	while (i <  6)
 		if (is_exact_word(str,aux[i++]))
 	 		return true;
 	return false;
@@ -113,6 +114,20 @@ int trace_check_flags(int argc, char **argv, t_params *params)
 				return 0;
 			argv[i+1][0] = '\0';
 		}
+		else if (is_exact_word("-f",argv[i]))	//first-hop
+		{
+			if ((i + 1) >= argc)
+				return needs_argument('m',params->flags);
+
+            if (valid_argument(argv[i+1], 254, 1))
+			{
+				params->ttl = ft_atoi(argv[i+1]);
+			}
+            else
+				return 0;
+			argv[i+1][0] = '\0';
+		}
+
 
 		if (is_key_word(argv[i]))
 			argv[i][0] = '\0';

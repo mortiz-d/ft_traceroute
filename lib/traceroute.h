@@ -11,10 +11,11 @@
 #define TOTAL_SIZE (ICMPHDR+sizeof(struct iphdr))
 
 #define DEFAULT_TTL 64
-#define DEFAULT_TIMEOUT 3000
+#define DEFAULT_TIMEOUT 100 //3000
 #define DEFAULT_HOPS 30
 #define DEFAULT_NQUERIES 3
 #define UDP_DEFAULT_BASE_PORT 33434
+#define MAX_PACKET_SIZE 65535
 
 #define ICMP_ECHO_CODE 0
 #define DEBUG 0
@@ -78,7 +79,8 @@ int trace_check_flags(int argc, char **argv,t_params *params);
 int prepare_trace( struct sockaddr_in addr, t_tracer *pin,t_params *params);
 
 //UDP
-bool process_probe_udp(t_tracer *pin, t_params *params, char *recv_buf);
+// bool process_probe_udp(t_tracer *pin, t_params *params, char *recv_buf);
+bool process_probe_udp(t_tracer *pin, t_params *params, char *recv_buf, int byte_size);
 int send_probe_udp(struct sockaddr_in addr, t_tracer *pin,t_params *params);
 
 //ICMP

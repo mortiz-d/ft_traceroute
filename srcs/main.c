@@ -64,7 +64,8 @@ int main(int argc, char **argv)
     t_params *params = NULL;
 	t_tracer *pin;
 	struct sockaddr_in addr;//direccion de destino
-    
+    int seq;
+
     if (argc < 2)
     {
         printf (TRACE_USSAGE_ERROR);
@@ -101,14 +102,18 @@ int main(int argc, char **argv)
     }
 
     printf("traceroute to %s (%s) , %d hops max , %ld byte packets\n",params->destination, params->ip_address, params->hops, (TOTAL_SIZE + params->payload_size));
+    seq = 1;
 	while (g_loop_trace && params->hops-- > 0)
 	{
 		if (!update_ttl_sockets(pin, params)) 
             break;
         
+        
+        printf("%d ",seq);
         ft_memset(pin->router_ip , 0, INET_ADDRSTRLEN);
         prepare_trace(addr, pin, params);
         params->ttl++;
+        seq++;
     }
     close_all(params,pin,0);
     return 0;

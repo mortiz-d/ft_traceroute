@@ -27,7 +27,7 @@ int send_probe_udp(struct sockaddr_in addr, t_tracer *pin,t_params *params)
 }
 
 
-bool process_probe_udp(t_tracer *pin, t_params *params, char *recv_buf)
+bool process_probe_udp(t_tracer *pin, t_params *params, char *recv_buf, int byte_size)
 {
     //Extracting and figuring out how the icmp package
     struct iphdr   *ip_hdr    = (struct iphdr *)recv_buf;
@@ -43,7 +43,7 @@ bool process_probe_udp(t_tracer *pin, t_params *params, char *recv_buf)
     uint16_t expect_port;
 
     //Check integrity
-    if (checksum((void *)recv_icmp, ICMPHDR + params->payload_size) != 0)
+    if (checksum((void *)recv_icmp, byte_size) != 0)
     {
        if (DEBUG)
             printf("ICMP packet integrity compromised\n");
