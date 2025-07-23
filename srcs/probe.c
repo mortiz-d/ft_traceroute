@@ -53,6 +53,7 @@ int prepare_trace(struct sockaddr_in addr, t_tracer *pin,t_params *params)
         pin->sequence++;
     }
 
+    // printf("\nIp comp : %s - %s \n",pin->router_ip,params->ip_address);
     if (ft_strncmp(pin->router_ip,params->ip_address,INET_ADDRSTRLEN) == 0)
         g_loop_trace = false;
     

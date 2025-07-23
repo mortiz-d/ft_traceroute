@@ -73,7 +73,6 @@ bool is_key_word(char * str)
 
 int trace_check_flags(int argc, char **argv, t_params *params)
 {
-	(void) params;
 	int i = 1;
 
 	while (i < argc)
@@ -117,7 +116,7 @@ int trace_check_flags(int argc, char **argv, t_params *params)
 		else if (is_exact_word("-f",argv[i]))	//first-hop
 		{
 			if ((i + 1) >= argc)
-				return needs_argument('m',params->flags);
+				return needs_argument('f',params->flags);
 
             if (valid_argument(argv[i+1], 254, 1))
 			{
