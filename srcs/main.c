@@ -4,11 +4,11 @@
 
 bool g_loop_trace;
 
-int close_all(t_params *params,t_tracer *pin,int error_code)
+int close_all(t_params *params,t_tracer *trace,int error_code)
 {
-    close_sockets(pin);
-    if (pin)
-        free(pin);
+    close_sockets(trace);
+    if (trace)
+        free(trace);
     if(params)
     {
         free(params->flags);
@@ -18,13 +18,13 @@ int close_all(t_params *params,t_tracer *pin,int error_code)
     return (error_code);
 }
 
-void setup_default_params(t_params *params,t_tracer *pin)
+void setup_default_params(t_params *params,t_tracer *trace)
 {
     t_flags *flags;
 
     flags = ft_calloc(1,sizeof(t_flags));
-	pin->id_process = getpid() & 0xFFFF; //Acortamos el tamaño del getpid para que entre bien en el packete icmp(16 bits)
-	pin->sequence = 0;
+	trace->id_process = getpid() & 0xFFFF; //Acortamos el tamaño del getpid para que entre bien en el packete icmp(16 bits)
+	trace->sequence = 0;
     
     
     g_loop_trace = true;
@@ -62,7 +62,7 @@ int assign_destination(char **argv,int argc, t_params *params)
 int main(int argc, char **argv) 
 {  
     t_params *params = NULL;
-	t_tracer *pin;
+	t_tracer *trace;
 	struct sockaddr_in addr;//direccion de destino
     int seq;
 
@@ -72,24 +72,24 @@ int main(int argc, char **argv)
         return 0;
     }
 
-    pin = ft_calloc(1,sizeof(t_tracer));
+    trace = ft_calloc(1,sizeof(t_tracer));
     params = ft_calloc(1,sizeof(t_params));
-    setup_default_params(params,pin);
+    setup_default_params(params,trace);
 
     if (trace_check_flags(argc, argv, params) == 0)
-        return (close_all(params,pin,1));
+        return (close_all(params,trace,1));
 
     if (!assign_destination(argv,argc,params))
-        return (close_all(params,pin,1));
+        return (close_all(params,trace,1));
 
-    pin->udp_sock  = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-    pin->icmp_sock = socket(AF_INET, SOCK_RAW,  IPPROTO_ICMP);
+    trace->udp_sock  = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    trace->icmp_sock = socket(AF_INET, SOCK_RAW,  IPPROTO_ICMP);
     
-    if (!establish_connection(params,pin->udp_sock))
-		return (close_all(params,pin,1));
+    if (!establish_connection(params,trace->udp_sock))
+		return (close_all(params,trace,1));
 
-	if (!establish_connection(params,pin->icmp_sock))
-        return (close_all(params,pin,1));
+	if (!establish_connection(params,trace->icmp_sock))
+        return (close_all(params,trace,1));
 
 	dns_lookup(params->destination, params);
 	ft_memset(&addr, 0, sizeof(addr));
@@ -98,23 +98,23 @@ int main(int argc, char **argv)
         printf("traceroute : %s : Nombre o servicio desconocido\n",params->destination);
         if (DEBUG)
             fprintf(stderr,"NO PUDE CONVERTIR A BINARIO LA IP");
-        return (close_all(params,pin,1));
+        return (close_all(params,trace,1));
     }
 
     printf("traceroute to %s (%s) , %d hops max , %ld byte packets\n",params->destination, params->ip_address, params->hops, (TOTAL_SIZE + params->payload_size));
     seq = 1;
 	while (g_loop_trace && params->hops-- > 0)
 	{
-		if (!update_ttl_sockets(pin, params)) 
+		if (!update_ttl_sockets(trace, params)) 
             break;
         
         
         printf("%d ",seq);
-        ft_memset(pin->router_ip , 0, INET_ADDRSTRLEN);
-        prepare_trace(addr, pin, params);
+        ft_memset(trace->router_ip , 0, INET_ADDRSTRLEN);
+        prepare_trace(addr, trace, params);
         params->ttl++;
         seq++;
     }
-    close_all(params,pin,0);
+    close_all(params,trace,0);
     return 0;
 }

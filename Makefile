@@ -33,7 +33,7 @@ all: $(NAME)
 $(NAME): $(OBJS)
 	@make -C ./libft
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT_A)
-#	mv ./$(NAME) ./testing/files/$(NAME)
+	mv ./$(NAME) ./testing/files/$(NAME)
 	$(BLUE)$(PROYECT_NAME) set Up $(RESET)
 
 $(OBJS_DIR)/%.o: srcs/%.c

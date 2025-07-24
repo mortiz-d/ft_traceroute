@@ -12,7 +12,7 @@
 
 #define DEFAULT_TTL 64
 #define DEFAULT_TIMEOUT 100 //3000
-#define DEFAULT_HOPS 30
+#define DEFAULT_HOPS 64
 #define DEFAULT_NQUERIES 3
 #define UDP_DEFAULT_BASE_PORT 33434
 #define MAX_PACKET_SIZE 65535
@@ -68,24 +68,25 @@ typedef struct s_tracer
 
 //Socket connection
 bool establish_connection(t_params *params,int new_sockfd);
-bool update_ttl_sockets(t_tracer *pin, t_params *params);
-bool close_sockets(t_tracer *pin);
+bool update_ttl_sockets(t_tracer *trace, t_params *params);
+bool close_sockets(t_tracer *trace);
 //DNS resolution
 int dns_lookup(char *host, t_params *params);
 char *ip_a_dns(const char *ip_str);
 
 int trace_check_flags(int argc, char **argv,t_params *params);
 
-int prepare_trace( struct sockaddr_in addr, t_tracer *pin,t_params *params);
+int prepare_trace( struct sockaddr_in addr, t_tracer *trace,t_params *params);
 
 //UDP
-// bool process_probe_udp(t_tracer *pin, t_params *params, char *recv_buf);
-bool process_probe_udp(t_tracer *pin, t_params *params, char *recv_buf, int byte_size);
-int send_probe_udp(struct sockaddr_in addr, t_tracer *pin,t_params *params);
+// bool process_probe_udp(t_tracer *trace, t_params *params, char *recv_buf);
+bool process_probe_udp(t_tracer *trace, t_params *params, char *recv_buf, int byte_size);
+int send_probe_udp(struct sockaddr_in addr, t_tracer *trace,t_params *params);
 
 //ICMP
-bool process_probe_icmp(t_tracer *pin, t_params *params, char *recv_buf);
-int send_probe_icmp(struct sockaddr_in addr, t_tracer *pin,t_params *params);
+// bool process_probe_icmp(t_tracer *trace, t_params *params, char *recv_buf);
+bool process_probe_icmp(t_tracer *trace, t_params *params, char *recv_buf, int byte_size);
+int send_probe_icmp(struct sockaddr_in addr, t_tracer *trace,t_params *params);
 
 //AUX
 unsigned short checksum(char *b, int len);
