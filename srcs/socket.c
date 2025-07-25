@@ -20,7 +20,7 @@ bool establish_connection(t_params *params,int sockfd)
     struct timeval tv_timeout;
 
     if (sockfd < 0) {
-        fprintf(stderr,"traceroute: socket error : cannot stablish socket , try using root user \n");
+        fprintf(stderr,"traceroute: socket error : cannot stablish socket\n");
         return false;
     }
 

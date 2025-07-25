@@ -1,0 +1,1 @@
+sudo setcap cap_net_raw+ep /files/ft_traceroute #Este comando es para permitir a un archivo usar sockets Raw sin usar al super usuario
