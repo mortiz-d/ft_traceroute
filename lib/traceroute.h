@@ -11,7 +11,7 @@
 #define TOTAL_SIZE (ICMPHDR+sizeof(struct iphdr))
 
 #define DEFAULT_TTL 64
-#define DEFAULT_TIMEOUT 100 //3000
+#define DEFAULT_TIMEOUT 3000
 #define DEFAULT_HOPS 64
 #define DEFAULT_NQUERIES 3
 #define UDP_DEFAULT_BASE_PORT 33434

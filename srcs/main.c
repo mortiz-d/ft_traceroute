@@ -82,11 +82,15 @@ int main(int argc, char **argv)
     if (!assign_destination(argv,argc,params))
         return (close_all(params,trace,1));
 
-    trace->udp_sock  = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    if (!params->flags->I)
+        trace->udp_sock  = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     trace->icmp_sock = socket(AF_INET, SOCK_RAW,  IPPROTO_ICMP);
     
-    if (!establish_connection(params,trace->udp_sock))
-		return (close_all(params,trace,1));
+    if (!params->flags->I)
+    {
+        if (!establish_connection(params,trace->udp_sock))
+            return (close_all(params,trace,1));
+    }
 
 	if (!establish_connection(params,trace->icmp_sock))
         return (close_all(params,trace,1));
@@ -107,7 +111,6 @@ int main(int argc, char **argv)
 	{
 		if (!update_ttl_sockets(trace, params)) 
             break;
-        
         
         printf("%d ",seq);
         ft_memset(trace->router_ip , 0, INET_ADDRSTRLEN);

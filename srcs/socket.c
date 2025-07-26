@@ -7,11 +7,14 @@ bool update_ttl_sockets(t_tracer *trace, t_params *params)
         fprintf(stderr,"traceroute: error : cannot stablish ttl on icmp socket\n");
         return false;
     }
-    if (setsockopt(trace->udp_sock, IPPROTO_IP, IP_TTL, &(params->ttl), sizeof(params->ttl)) < 0) 
-	{
-        fprintf(stderr,"traceroute: error : cannot stablish ttl on udp socket\n");
-        return false;
-    } 
+    if (!params->flags->I)
+    {
+        if (setsockopt(trace->udp_sock, IPPROTO_IP, IP_TTL, &(params->ttl), sizeof(params->ttl)) < 0) 
+        {
+            fprintf(stderr,"traceroute: error : cannot stablish ttl on udp socket\n");
+            return false;
+        } 
+    }
     return true;
 }
 
